@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useRoomStore } from '../store/roomStore';
 import { Button } from '../components/ui/Button';
@@ -17,14 +17,13 @@ export function RoomPage() {
   const adminSecret = params.get('admin') || undefined;
   const { joinRoom, room, setMedia, control, toggleGuestControl } = useRoomStore();
 
-  const [name, setName] = useState('');
   const [joined, setJoined] = useState(false);
   const [inputUrl, setInputUrl] = useState('');
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (!roomId || joined) return;
-    const username = name.trim() || `Guest-${Math.floor(Math.random() * 1000)}`;
+    const username = `Guest-${Math.floor(Math.random() * 1000)}`;
     joinRoom(roomId, username, adminSecret).then((ok) => setJoined(ok));
   }, [roomId, joined]);
 

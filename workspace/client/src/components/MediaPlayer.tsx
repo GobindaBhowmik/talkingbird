@@ -1,5 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
+const RPAny: any = ReactPlayer as any;
 
 export type PlayerKind = 'youtube' | 'url' | 'gdrive' | 'upload';
 
@@ -21,8 +22,10 @@ export type PlayerEvents = {
   onRate: (rate: number) => void;
 };
 
-export function MediaPlayer({ source, state, onPlay, onPause, onSeek, onRate }: { source?: PlayerSource; state: PlayerState; } & PlayerEvents) {
-  const ref = useRef<ReactPlayer | null>(null);
+
+
+export function MediaPlayer({ source, state, onPlay, onPause, onSeek }: { source?: PlayerSource; state: PlayerState; } & PlayerEvents) {
+  const ref = useRef<any>(null);
 
   useEffect(() => {
     if (!ref.current) return;
@@ -57,8 +60,8 @@ export function MediaPlayer({ source, state, onPlay, onPause, onSeek, onRate }: 
   return (
     <div className="relative w-full">
       <div className="aspect-video w-full overflow-hidden rounded-xl bg-black">
-        <ReactPlayer
-          ref={ref as any}
+        <RPAny
+          ref={ref}
           url={url}
           width="100%"
           height="100%"
@@ -67,12 +70,11 @@ export function MediaPlayer({ source, state, onPlay, onPause, onSeek, onRate }: 
           playbackRate={state.playbackRate}
           onPlay={() => onPlay()}
           onPause={() => onPause(ref.current?.getCurrentTime?.() || 0)}
-          onSeek={(s) => onSeek(s)}
-          onPlaybackRateChange={(r) => onRate(r)}
+          onSeek={(s: number) => onSeek(s)}
           config={{
             youtube: { playerVars: { modestbranding: 1, rel: 0 } },
             file: { forceHLS: false },
-          }}
+          } as any}
         />
       </div>
     </div>
