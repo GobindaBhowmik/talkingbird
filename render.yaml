@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: talkingbird
+    env: node
+    plan: free
+    buildCommand: |
+      cd server && npm install && npx tsc
+      cd ../workspace/client && npm install && npm run build
+    startCommand: |
+      cd server && node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
